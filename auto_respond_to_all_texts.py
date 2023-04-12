@@ -8,7 +8,7 @@ import argparse
 import logging
 from src.models import AutoRespondConfig
 # from generator import EmojipastaGenerator
-from EmojipastaBot.src.emojipasta.generator import EmojipastaGenerator
+from emojipasta.generator import EmojipastaGenerator
 
 logging.basicConfig(level=logging.DEBUG)
 

@@ -1,0 +1,14 @@
+config.json
+.vscode
+.vscodeignore
+__pycache__
+.DS_STORE
+.venv
+config.json
+contacts.vcf
+notes.md
+test.py
+autoresponder.config.json
+main.py
+groupchat.theboys.config.json
+groupchat.config.json

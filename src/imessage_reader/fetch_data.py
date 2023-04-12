@@ -14,7 +14,7 @@ import sys
 
 from os.path import expanduser
 
-from imessage_reader import common, create_sqlite, write_excel, data_container
+from src.imessage_reader import common, create_sqlite, write_excel, data_container
 
 
 # noinspection PyMethodMayBeStatic

@@ -5,6 +5,15 @@ This is a few different implementations of an iMessage chatbot that uses openAI'
 ## Caveats:
 This has to be ran on mac with iCloud account and iMessage setup and thus will appear to be sent from *you* rather than an external number. Also I believe that groupchat has to be already created. I initially tried to use twilio to power the texts but it looks like as of right now (April 2023) they have deprecated groupmessaging. 
 
+## Instructions:
+1. create virtual environment with `python -m venv .venv`
+2. install python packages with `pip install -r requirements.txt`
+3. Install the emojiapasta generator, not a pip package but there is a setup.py so:
+    1. Go to the pip package installation location in the virtual environment: `cd .venv/lib/python3.10/site-packages`
+    2. Clone the emojipastabot there: `git clone https://github.com/Kevinpgalligan/EmojipastaBot.git`
+    3. Open the emojipastabot repo and run the setup.py file: `cd emojipasta && pip install .`
+4. Install the py-imessage-shortcuts package. You'll need to set up the shortcut by double clicking the `send-imessage.shortcut` and then selecting "Add shortcut" (the shortcut is from that repo - I did not create it).
+
 ## auto_respond_to_all_texts.py
 I wrote this script to intercept any text I receive and then auto-respond to it. Currently I use it to let people know I am at work and wont be on my phone. Uses Emojipastabot to make gpt's response less ✨boring✨.
 
