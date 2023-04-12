@@ -1,4 +1,5 @@
-from imessage_reader import fetch_data
+# from src.imessage_reader import fetch_data
+from src.imessage_reader import fetch_data
 import imessage
 import time
 import openai
@@ -6,6 +7,7 @@ import argparse
 import json
 import logging
 from src.models import GroupchatConfig
+from emojipasta.generator import EmojipastaGenerator
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -35,6 +37,7 @@ def get_gpt_response(command: str) -> str:
 
 def main():
     fd = fetch_data.FetchData()
+    emoji_generator = EmojipastaGenerator.of_default_mappings()
     while True:
         logging.debug(f'starting loop: ')
         start_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - config.delay_between_loops))
@@ -52,6 +55,8 @@ def main():
             logging.debug(f'command received for bot: {msg.text}')
 
             resp = get_gpt_response(msg.text)
+            if config.emoji_pasta:
+                resp = emoji_generator.generate_emojipasta(resp)
             resp = f'bot: {resp}'
 
             imessage.send(config.groupchat_recipients, resp)
