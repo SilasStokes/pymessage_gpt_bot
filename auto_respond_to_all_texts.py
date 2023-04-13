@@ -1,4 +1,4 @@
-from imessage_reader import fetch_data
+from src.imessage_reader import fetch_data
 import imessage
 import time
 import openai
@@ -9,6 +9,8 @@ import logging
 from src.models import AutoRespondConfig
 # from generator import EmojipastaGenerator
 from emojipasta.generator import EmojipastaGenerator
+
+dnd_path = f'{os.path.expanduser("~")}/Library/DoNotDisturb/DB/Assertions.json'
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -36,6 +38,18 @@ def generate_response(text_message: str) -> str:
     )
     return f'{resp.choices[0].text.strip()}'
 
+def get_focus_mode() -> bool:
+    try:
+        with open(dnd_path, 'r') as f:
+            data = json.load(f)
+            assert data['data'][0]['storeAssertionRecords'][0]['assertionDetails']['assertionDetailsModeIdentifier']
+            # modeid = data['data'][0]['storeAssertionRecords'][0]['assertionDetails']['assertionDetailsModeIdentifier']
+            return True
+            # print(json.dumps(modeid, indent=4, sort_keys=True))
+    except:
+        return False
+
+
 
 def main():
     logging.debug(f'starting autoresponder with {config=}')
@@ -43,6 +57,13 @@ def main():
     emoji_generator = EmojipastaGenerator.of_default_mappings()
 
     while True:
+        focus_mode = get_focus_mode()
+
+        if config.only_respond_during_focus_mode and not focus_mode:
+            logging.debug(f'focus mode is off, skipping...')
+            time.sleep(config.delay_between_loops)
+            continue
+
         logging.debug(f'starting loop: ')
         
         start_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - config.delay_between_loops))
