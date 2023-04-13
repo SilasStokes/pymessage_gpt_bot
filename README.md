@@ -18,11 +18,12 @@ This has to be ran on mac with iCloud account and iMessage setup and thus will a
 I wrote this script to intercept any text I receive and then auto-respond to it. Currently I use it to let people know I am at work and wont be on my phone. Uses Emojipastabot to make gpt's response less ✨boring✨.
 
 ### TODO:
-- [x] set up config so that emoji pasta can be turned off and on. 
-- [x] I have to manually run it when I start work and stop it when I'm off work - a better implementation would be to run it constantly and programmatically check if do not disturb is on and only respond if dnr is on. 
-- [ ] Change the gpt prompt to allow for the focus mode to be programmatically added - e.g gpt can say something like "Silas is in Do not disturb mode" vs. "Silas is in sleep mode"
-- [ ] currenty chatgpt only sees the most recent incoming message... it would be interesting to max out the tokens and add as much of the message history as possible so gpt can have a contexted response. e.g when someone texts me "hey", gpt usually will send the same response. 
+- [ ] clean up the gpt prompt generation, rn it's inline and gross
 - [ ] add support for contacts.vcf that way gpt can know the contact name for the person texting and address them by name. 
+- [x] set up config so that emoji pasta can be turned off and on. 
+- [x] I have to manually run it when I start work and stop it when I'm off work - a better implementation would be to run it constantly and programmatically check if do not disturb is on and only respond if dnr is on. Reading here: https://talk.automators.fm/t/get-current-focus-mode-via-script/12423/10
+- [x] Change the gpt prompt to allow for the focus mode to be programmatically added - e.g gpt can say something like "Silas is in Do not disturb mode" vs. "Silas is in sleep mode"
+- [x] currenty chatgpt only sees the most recent incoming message... it would be interesting to max out the tokens and add as much of the message history as possible so gpt can have a contexted response. e.g when someone texts me "hey", gpt usually will send the same response. 
 
 
 ## groupchat.py

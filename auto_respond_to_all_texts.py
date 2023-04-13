@@ -10,7 +10,9 @@ from src.models import AutoRespondConfig
 # from generator import EmojipastaGenerator
 from emojipasta.generator import EmojipastaGenerator
 
-dnd_path = f'{os.path.expanduser("~")}/Library/DoNotDisturb/DB/Assertions.json'
+HOME = os.path.expanduser('~')
+DND_STATE_PATH = f'{HOME}/Library/DoNotDisturb/DB/Assertions.json'
+DND_READABLE_PATH = f'{HOME}/Library/DoNotDisturb/DB/ModeConfigurations.json'
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -32,22 +34,23 @@ except Exception as exc:
 def generate_response(text_message: str) -> str:
     resp = openai.Completion.create(
         model="text-davinci-003",
-        prompt=f'{config.gptprompt}\n{text_message}',
+        prompt=f'{text_message}',
         max_tokens=1000,
         temperature=0
     )
     return f'{resp.choices[0].text.strip()}'
 
-def get_focus_mode() -> bool:
+
+def get_focus_mode() -> str:
     try:
-        with open(dnd_path, 'r') as f:
-            data = json.load(f)
-            assert data['data'][0]['storeAssertionRecords'][0]['assertionDetails']['assertionDetailsModeIdentifier']
-            # modeid = data['data'][0]['storeAssertionRecords'][0]['assertionDetails']['assertionDetailsModeIdentifier']
-            return True
-            # print(json.dumps(modeid, indent=4, sort_keys=True))
+        with open(DND_STATE_PATH, 'r') as dnd_state_file, open(DND_READABLE_PATH, 'r') as dnd_readable_file:
+            dnd_state = json.load(dnd_state_file)
+            modeid = dnd_state['data'][0]['storeAssertionRecords'][0]['assertionDetails']['assertionDetailsModeIdentifier']
+            config = json.load(dnd_readable_file)
+            focus = config['data'][0]['modeConfigurations'][modeid]['mode']['name']
+            return focus
     except:
-        return False
+        return ''
 
 
 
@@ -72,13 +75,27 @@ def main():
             logging.debug(f'\tno messages found')
         
         for msg in msgs:
+
             logging.debug(f'\tchecking message: {msg.text}')
             if msg.is_from_me == 1:
                 logging.debug(f'\t\tis from me, skipping...')
                 continue
 
+            gpt_prompt = f'You\'re being used as an autoresponder for Silas. Currently he is in {focus_mode} mode so he\'s not seeing the message and need you to generate the response for him. Please use the message history to tailor a custom response. Include a fun fact based on text history. Also inform the recipient what focous mode he is in. The message history is below:\n\n'
+            message_history = fd.get_messages_from(msg.user_id)
+            message_history_str = 'Message History:\n'
+            for i, text in enumerate(message_history):
+                if i > 10:
+                    break
+                content = text.text
+                direction = 'me' if text.is_from_me == 1 else 'friend'
+                message_history_str += f'{direction}: {content}\n'
+
+            gpt_prompt += message_history_str
+            gpt_prompt += f'\n\nMessage to respond to:\n{msg.text}'
+
             
-            resp = generate_response(msg.text)
+            resp = generate_response(gpt_prompt)
             if config.emoji_pasta:
                 resp = emoji_generator.generate_emojipasta(resp)
             logging.debug(f'\tResponse Generated: {resp}')

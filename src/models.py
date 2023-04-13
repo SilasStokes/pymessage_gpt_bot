@@ -15,3 +15,4 @@ class AutoRespondConfig:
     openai_api_key: str
     emoji_pasta: bool
     delay_between_loops: int
+    only_respond_during_focus_mode: bool
