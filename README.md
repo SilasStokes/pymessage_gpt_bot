@@ -18,11 +18,11 @@ This has to be ran on mac with iCloud account and iMessage setup and thus will a
 I wrote this script to intercept any text I receive and then auto-respond to it. Currently I use it to let people know I am at work and wont be on my phone. Uses Emojipastabot to make gpt's response less ✨boring✨.
 
 ### TODO:
-- [ ] set up config so that emoji pasta can be turned off and on. 
-- [ ] I have to manually run it when I start work and stop it when I'm off work - a better implementation would be to run it constantly and programmatically check if do not disturb is on and only respond if dnr is on. 
-- [ ] currently responding to groupchats is broken, could be fixed by manually adding your groupchats to the program but that's not ideal. Need to find a way to provide a mapping of user_id to groupchat phone numbers. 
+- [x] set up config so that emoji pasta can be turned off and on. 
+- [x] I have to manually run it when I start work and stop it when I'm off work - a better implementation would be to run it constantly and programmatically check if do not disturb is on and only respond if dnr is on. 
+- [ ] Change the gpt prompt to allow for the focus mode to be programmatically added - e.g gpt can say something like "Silas is in Do not disturb mode" vs. "Silas is in sleep mode"
 - [ ] currenty chatgpt only sees the most recent incoming message... it would be interesting to max out the tokens and add as much of the message history as possible so gpt can have a contexted response. e.g when someone texts me "hey", gpt usually will send the same response. 
-- [ ] add support for contacts.vcf that way gpt can auto know someones name. 
+- [ ] add support for contacts.vcf that way gpt can know the contact name for the person texting and address them by name. 
 
 
 ## groupchat.py
@@ -33,8 +33,7 @@ This is a more conventional "chatbot", mirror'd after the ones I see in discord.
 
 
 ## General Todo:
-- [ ] EmojipastaBot is installed incorrectly - I want to install it in the virtual environment instead of as a top level folder. 
-- [ ] Write a script that will set up py-imessage-shortcuts and Emojipastabots since they aren't hosted on pip. 
 - [ ] push changes to imessage_reader to the repo. 
-- [ ] Allow the parsing of a contacact file so the names associated with the phone number can be known.
+- [ ] Allow the parsing of a contact file so the names associated with the phone number can be known.
 - [ ] both scripts work exactly the same way, see if i can generalize more
+- [x] EmojipastaBot is installed incorrectly - I want to install it in the virtual environment instead of as a top level folder. 
