@@ -13,6 +13,9 @@ This has to be ran on mac with iCloud account and iMessage setup and thus will a
     2. Clone the emojipastabot there: `git clone https://github.com/Kevinpgalligan/EmojipastaBot.git`
     3. Open the emojipastabot repo and run the setup.py file: `cd emojipasta && pip install .`
 4. Install the py-imessage-shortcuts package. You'll need to set up the shortcut by double clicking the `send-imessage.shortcut` and then selecting "Add shortcut" (the shortcut is from that repo - I did not create it).
+5. Create a Chat GPT API Key [here](https://platform.openai.com/api-keys) and add it to your config file. Alternatively, you can set the global variable in the command line: `export OPENAI_API_KEY=<your-api-key>`
+6. In order to read iMessage data, the application or terminal will need full disk access. iMessage data exists in `~/Library/Messages` which is protected. Go to `Settings -> Privacy & Security -> Full Disk Access` and select the application that should get access.
+7. Ensure iMessage text forwarding is enabled on your iPhone.
 
 ## auto_respond_to_all_texts.py
 I wrote this script to intercept any text I receive and then auto-respond to it. Currently I use it to let people know I am at work and wont be on my phone. Uses Emojipastabot to make gpt's response less ✨boring✨.
