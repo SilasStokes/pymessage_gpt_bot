@@ -13,6 +13,7 @@ from emojipasta.generator import EmojipastaGenerator
 HOME = os.path.expanduser('~')
 DND_STATE_PATH = f'{HOME}/Library/DoNotDisturb/DB/Assertions.json'
 DND_READABLE_PATH = f'{HOME}/Library/DoNotDisturb/DB/ModeConfigurations.json'
+client = openai.Client()
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -32,13 +33,18 @@ except Exception as exc:
 
 
 def generate_response(text_message: str) -> str:
-    resp = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=f'{text_message}',
+    resp = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                'role': 'user',
+                'content': text_message
+            }
+        ],
         max_tokens=1000,
         temperature=0
     )
-    return f'{resp.choices[0].text.strip()}'
+    return resp.choices[0].message.content
 
 
 def get_focus_mode() -> str:
