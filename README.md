@@ -37,7 +37,8 @@ This is a more conventional "chatbot", mirror'd after the ones I see in discord.
 
 
 ## General Todo:
-- [ ] push changes to imessage_reader to the repo. 
+- [ ] refactor for library type interface
+- [ ] fix superloop - i.e making a parent script that can dynamically run the modules
+- [ ] make the focus mode set up better
+- [ ] add some manner of adding contacts (check viability of parsing contacts from macos itself)
 - [ ] Allow the parsing of a contact file so the names associated with the phone number can be known.
-- [ ] both scripts work exactly the same way, see if i can generalize more
-- [x] EmojipastaBot is installed incorrectly - I want to install it in the virtual environment instead of as a top level folder. 
