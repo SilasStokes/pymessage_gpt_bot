@@ -18,6 +18,7 @@ class GroupChat(JSONWizard):
     name: str
     prompt: str
     context: bool
+    enabled: bool
     only_reply_focus_mode: bool
     number_previous_messages: int
     emoji_pasta: bool
@@ -34,6 +35,7 @@ class SingleChat:
     about: str
     prompt: str
     context: bool
+    enabled: bool
     only_reply_focus_mode: bool
     number_previous_messages: int
     emoji_pasta: bool
@@ -47,6 +49,7 @@ class DefaultSingleChat:
     about: str
     prompt: str
     context: bool
+    enabled: bool
     only_reply_focus_mode: bool
     number_previous_messages: int
     emoji_pasta: bool

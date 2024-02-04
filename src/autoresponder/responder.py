@@ -1,4 +1,4 @@
-from .models import Configuration, SingleChat
+from .models import Configuration, SingleChat, GroupChat, DefaultSingleChat
 from imessage_reader.fetch_data import FetchData
 from imessage_reader.data_container import MessageData
 import imessage
@@ -34,19 +34,40 @@ class AutoResponder:
         except:
             return None
         
-    def _build_text_chain_single_chat(self, message: MessageData, single_chat: SingleChat):
-        history = self.fetch_data.get_messages_from(single_chat.phone_number, single_chat.number_previous_messages)
-        prompt = single_chat.prompt
-        newest_message = message.text
-        prompt += '\n'
+    def _build_text_chain_single_chat(self, message: MessageData, single_chat: SingleChat) -> str:
+        previous_messages = 0 if not single_chat.context else single_chat.number_previous_messages
+        history = self.fetch_data.get_messages_from(single_chat.phone_number, previous_messages + 1)
+        prompt = f'{single_chat.prompt}\n'
         for text in reversed(history):
-            if not single_chat.context:
-                break
             person = self.config.personal_info.name if text.is_from_me else single_chat.name
             prompt += f'{person}: {text.text}\n'
-                
-        prompt += f'Reply to this: {newest_message}'
         self.logger.debug(f'Request generated for {single_chat.name}: {prompt}')
+        return prompt
+    
+    def _build_text_chain_group_chat(self, message: MessageData, group_chat: GroupChat) -> str:
+        previous_messages = 0 if not group_chat.context else group_chat.number_previous_messages
+        history = self.fetch_data.get_messages_from(message.user_id, previous_messages + 1)
+        prompt = f'{group_chat.prompt}\n'
+        phone_number_to_name = { contact.phone_number: contact.name for contact in group_chat.recipients }
+        for text in reversed(history):
+            if text.is_from_me:
+                person = self.config.personal_info.name
+            elif text.phone_number in phone_number_to_name:
+                person = phone_number_to_name[text.phone_number]
+            else:
+                person = 'N/A'
+            prompt += f'{person}: {text.text}\n'
+        self.logger.debug(f'Request generated for {group_chat.name}: {prompt}')
+        return prompt
+    
+    def _build_text_chain_default_single_chat(self, message: MessageData, chat: DefaultSingleChat) -> str:
+        previous_messages = 0 if not chat.context else chat.number_previous_messages
+        history = self.fetch_data.get_messages_from(message.user_id, previous_messages + 1)
+        prompt = f'{chat.prompt}\n'
+        for text in reversed(history):
+            person = self.config.personal_info.name if text.is_from_me else 'Them'
+            prompt += f'{person}: {text.text}'
+        self.logger.debug(f'Request generated for {message.user_id}: {prompt}')
         return prompt
     
     def _generate_response(self, message: str) -> str:
@@ -61,7 +82,7 @@ class AutoResponder:
         )
         return response.choices[0].message.content
     
-    def _handle_response(self):
+    def _handle_response(self) -> None:
         focus_mode = self._get_focus_mode()
         messages = self.fetch_data.get_messages_between_dates(
             time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - self.config.delay_between_loops)))
@@ -69,20 +90,26 @@ class AutoResponder:
 
         for message in messages:
             self.logger.debug(f'Message: {message}')
-            
             # IMPORTANT:
             # Single chats are identified by phone number. Group chats are identified by the group name
             single_chat = [ chat for chat in self.config.single_chats if message.user_id == chat.phone_number ]
             group_chat = [ chat for chat in self.config.group_chats if message.user_id == chat.name ]
-            if single_chat:
+            if single_chat and single_chat[0].enabled:
                 prompt = self._build_text_chain_single_chat(message, single_chat[0])
                 response = self._generate_response(prompt)
                 self.logger.debug(f'Response generated for {single_chat[0].name}: {response}')
                 imessage.send([message.user_id], response) 
-            elif group_chat:
-                pass
-            elif self.config.default_single_chat:
-                pass
+            elif group_chat and group_chat[0].enabled:
+                prompt = self._build_text_chain_group_chat(message, group_chat[0])
+                response = self._generate_response(prompt)
+                self.logger.debug(f'Response generated for {group_chat[0].name}: {response}')
+                recipients = [recipient.phone_number for recipient in group_chat[0].recipients]
+                imessage.send(recipients, response)
+            elif self.config.default_single_chat.enabled:
+                prompt = self._build_text_chain_default_single_chat(message, self.config.default_single_chat)
+                response = self._generate_response(prompt)
+                self.logger.debug(f'Response generated for {message.user_id}: {response}')
+                imessage.send([message.user_id], response)
          
         self.scheduler.enter(self.config.delay_between_loops, 1, self._handle_response, ())
     

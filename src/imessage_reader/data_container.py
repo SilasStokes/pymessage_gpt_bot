@@ -23,6 +23,7 @@ class MessageData:
     user_id: str
     text: str
     date: str
+    phone_number: str
     service: str
     account: str
     is_from_me: int
@@ -36,6 +37,7 @@ class MessageData:
         return (
             f"user id:\t\t\"{self.user_id}\"\n"
             f"date and time:\t\t{self.date}\n"
+            f"phone number:\t\t{self.phone_number}\n"
             f"service:\t\t{self.service}\n"
             f"caller id:\t\t{self.account}\n"
             f"direction:\t\t{'sent' if self.is_from_me else 'received'}\n"
