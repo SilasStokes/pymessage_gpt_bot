@@ -1,6 +1,9 @@
 from .models import Configuration, SingleChat, GroupChat, DefaultSingleChat
 from imessage_reader.fetch_data import FetchData
 from imessage_reader.data_container import MessageData
+from emojipasta import Emojipasta
+
+
 import imessage
 
 import openai
@@ -22,6 +25,7 @@ class AutoResponder:
         self.fetch_data = FetchData()
         self.scheduler = sched.scheduler(time.time, time.sleep)
         self.client = openai.Client(api_key=self.config.openai_api_key)
+        self.emojipasta_generator = Emojipasta.of_default_mappings()
         
     def _get_focus_mode(self) -> str | None:
         try:
@@ -72,7 +76,7 @@ class AutoResponder:
     
     def _generate_response(self, message: str) -> str:
         response = self.client.chat.completions.create(
-            model='gpt-3.5-turbo',
+            model='gpt-4',
             messages=[{
                 'role': 'user',
                 'content': message
@@ -86,7 +90,7 @@ class AutoResponder:
         focus_mode = self._get_focus_mode()
         messages = self.fetch_data.get_messages_between_dates(
             time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - self.config.delay_between_loops)))
-        messages = filter(lambda message: message.is_from_me != 1, messages)
+        # messages = filter(lambda message: message.is_from_me != 1, messages)
 
         for message in messages:
             self.logger.debug(f'Message: {message}')
@@ -97,20 +101,27 @@ class AutoResponder:
             if single_chat and single_chat[0].enabled:
                 prompt = self._build_text_chain_single_chat(message, single_chat[0])
                 response = self._generate_response(prompt)
+                if single_chat[0].emoji_pasta:
+                    response = self.emojipasta_generator.generate_emojipasta(response)
+
                 self.logger.debug(f'Response generated for {single_chat[0].name}: {response}')
                 imessage.send([message.user_id], response) 
             elif group_chat and group_chat[0].enabled:
                 prompt = self._build_text_chain_group_chat(message, group_chat[0])
                 response = self._generate_response(prompt)
+                if group_chat[0].emoji_pasta:
+                    response = self.emojipasta_generator.generate_emojipasta(response)
                 self.logger.debug(f'Response generated for {group_chat[0].name}: {response}')
                 recipients = [recipient.phone_number for recipient in group_chat[0].recipients]
                 imessage.send(recipients, response)
             elif self.config.default_single_chat.enabled:
                 prompt = self._build_text_chain_default_single_chat(message, self.config.default_single_chat)
                 response = self._generate_response(prompt)
+                if self.config.default_single_chat.emoji_pasta:
+                    response = self.emojipasta_generator.generate_emojipasta(response)
                 self.logger.debug(f'Response generated for {message.user_id}: {response}')
                 imessage.send([message.user_id], response)
-         
+        
         self.scheduler.enter(self.config.delay_between_loops, 1, self._handle_response, ())
     
     def run(self):

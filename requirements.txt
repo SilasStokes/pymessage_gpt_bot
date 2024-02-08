@@ -14,7 +14,7 @@ dataclass-wizard==0.22.3
 decorator==5.1.1
 distro==1.9.0
 emoji==2.2.0
-emojipastabot @ file:///Users/kylehurd/Workplace/pymessage_gpt_bot/venv/lib/python3.11/site-packages/EmojipastaBot
+emojipasta==1.0
 et-xmlfile==1.1.0
 executing==1.2.0
 Flask==2.2.2
