@@ -13,3 +13,6 @@ autoresponder.config.json
 main.py
 groupchat.theboys.config.json
 groupchat.config.json
+build
+dist
+dist_bot
