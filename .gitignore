@@ -17,3 +17,6 @@ build
 dist
 dist_bot
 clean.sh
+build
+dist
+dist_bot
