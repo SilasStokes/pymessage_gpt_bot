@@ -15,19 +15,18 @@ class RuntimeEnvironment():
             self.CONFIG_PATH = os.path.join(self.WORKING_DIR, 'config.json')
             self.MAIN_NAME = 'main'
             self.MAIN_PATH = os.path.abspath(os.path.join(self.WORKING_DIR, '..'))
-            self.PYTHON_EXE = f'python'
             self.MAIN_EXE = os.path.join(self.MAIN_PATH, self.MAIN_NAME)
+            self.PYTHON_EXE = f'python'
             self.POPEN_CMD = [self.MAIN_EXE, '--config', self.CONFIG_PATH]
         else:
             self.RUNNING_IN_INSTALLER = False
             self.CONFIG_PATH = os.path.join(self.WORKING_DIR, 'configs', 'config.json')
             self.MAIN_NAME = 'main.py'
             self.MAIN_PATH = os.path.abspath(self.WORKING_DIR)
-            self.PYTHON_EXE = f'.venv/bin/python'
             self.MAIN_EXE = os.path.join(self.MAIN_PATH, self.MAIN_NAME)
+            self.PYTHON_EXE = f'.venv/bin/python'
             self.POPEN_CMD = [self.PYTHON_EXE, self.MAIN_EXE, '--config', self.CONFIG_PATH]
 
-rte = RuntimeEnvironment()
 
 class MenubarText:
     START = 'Start'
@@ -37,6 +36,7 @@ class MenubarText:
     QUIT = 'Quit'
 
 bot_process = None
+rte = RuntimeEnvironment()
 
 def kill_and_null_proc():
     global bot_process
@@ -45,25 +45,50 @@ def kill_and_null_proc():
         bot_process = None
 
 
-@rumps.clicked(MenubarText.START)
-def on_click_start(_):
-    global bot_process
-    kill_and_null_proc()
-    bot_process = Popen(rte.POPEN_CMD, cwd=rte.WORKING_DIR)
 
-@rumps.clicked(MenubarText.STOP)
 def on_click_stop(_):
     kill_and_null_proc()
+    start_button = app.menu[MenubarText.START]
+    stop_button = app.menu[MenubarText.STOP]
+    restart_button = app.menu[MenubarText.RESTART]
+
+    restart_button.set_callback(None)
+    stop_button.set_callback(None)
+    start_button.set_callback(on_click_start)
+
 
 @rumps.clicked(MenubarText.EDIT_CONFIG)
 def on_click_edit_config(_):
     Popen(["open", "-e", rte.CONFIG_PATH])
 
-app = rumps.App('💬', quit_button=rumps.MenuItem(MenubarText.QUIT))
+def on_click_restart(_):
+    kill_and_null_proc()
+    on_click_start(_)
+
+@rumps.clicked(MenubarText.QUIT)
+def clean_up_before_quit(_):
+    kill_and_null_proc()
+    rumps.quit_application()
+
+@rumps.clicked(MenubarText.START)
+def on_click_start(_):
+    global bot_process
+    start_button = app.menu[MenubarText.START]
+    stop_button = app.menu[MenubarText.STOP]
+    restart_button = app.menu[MenubarText.RESTART]
+
+    restart_button.set_callback(on_click_restart)
+    stop_button.set_callback(on_click_stop)
+    start_button.set_callback(None)
+    bot_process = Popen(rte.POPEN_CMD, cwd=rte.WORKING_DIR)
+
+app = rumps.App('💬', quit_button=None)
 app.menu = [
-    (MenubarText.START),
-    (MenubarText.STOP),
-    (MenubarText.RESTART), # update this to be stateful based on if process is not null
-    (MenubarText.EDIT_CONFIG)
+    MenubarText.START,
+    MenubarText.STOP,
+    MenubarText.RESTART, # update this to be stateful based on if process is not null
+    MenubarText.EDIT_CONFIG,
+    MenubarText.QUIT
 ]
+
 app.run()
