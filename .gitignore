@@ -16,3 +16,4 @@ groupchat.config.json
 build
 dist
 dist_bot
+clean.sh
