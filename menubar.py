@@ -14,8 +14,9 @@ class RuntimeEnvironment():
             self.RUNNING_IN_INSTALLER = True
             self.CONFIG_PATH = os.path.join(self.WORKING_DIR, 'config.json')
             self.MAIN_NAME = 'main'
+            # self.MAIN_PATH = self.WORKING_DIR
             self.MAIN_PATH = os.path.abspath(os.path.join(self.WORKING_DIR, '..'))
-            self.MAIN_EXE = os.path.join(self.MAIN_PATH, self.MAIN_NAME)
+            self.MAIN_EXE = os.path.join(self.MAIN_PATH, 'MacOS' ,self.MAIN_NAME)
             self.PYTHON_EXE = f'python'
             self.POPEN_CMD = [self.MAIN_EXE, '--config', self.CONFIG_PATH]
         else:
@@ -27,6 +28,8 @@ class RuntimeEnvironment():
             self.PYTHON_EXE = f'.venv/bin/python'
             self.POPEN_CMD = [self.PYTHON_EXE, self.MAIN_EXE, '--config', self.CONFIG_PATH]
 
+debug = True
+
 
 class MenubarText:
     START = 'Start'
@@ -37,6 +40,11 @@ class MenubarText:
 
 bot_process = None
 rte = RuntimeEnvironment()
+if debug:
+    for root, _, f in os.walk(rte.WORKING_DIR):
+        for file in f:
+            print(f'{root}/{f}')
+        break
 
 def kill_and_null_proc():
     global bot_process

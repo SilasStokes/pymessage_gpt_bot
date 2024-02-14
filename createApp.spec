@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+OUTPUT_NAME = "GPT iMessage Bot"
 
 main_analysis = Analysis(
     ['main.py'],
@@ -30,9 +31,11 @@ menubar_analysis = Analysis(
     noarchive=False,
 )
 
-MERGE( (main_analysis, 'main', 'main'), (menubar_analysis, 'menubar', 'menubar'))
+MERGE( (menubar_analysis, 'menubar', 'menubar'), (main_analysis, 'main', 'main'))
+# MERGE( (main_analysis, 'main', 'main'), (menubar_analysis, 'menubar', 'menubar'))
 
 main_pyz = PYZ(main_analysis.pure)
+
 main_exe = EXE(
     main_pyz,
     main_analysis.scripts,
@@ -43,7 +46,7 @@ main_exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,
+    console=True, # try changing me
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
@@ -62,7 +65,8 @@ menubar_exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,
+    # console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
@@ -71,14 +75,21 @@ menubar_exe = EXE(
 )
 
 main_coll = COLLECT(
-    main_exe,
-    main_analysis.binaries,
-    main_analysis.datas,
     menubar_exe,
     menubar_analysis.binaries,
     menubar_analysis.datas,
+    main_exe,
+    main_analysis.binaries,
+    main_analysis.datas,
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='main',
+    name=OUTPUT_NAME,
+)
+
+app = BUNDLE(
+    main_coll,
+    name='GPT iMessage Bot.app',
+    icon=None,
+    bundle_identifier=None,
 )
