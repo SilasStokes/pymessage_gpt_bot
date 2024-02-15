@@ -2,6 +2,7 @@
 
 OUTPUT_NAME = "GPT iMessage Bot"
 
+
 main_analysis = Analysis(
     ['main.py'],
     pathex=[],
@@ -87,8 +88,18 @@ main_coll = COLLECT(
     name=OUTPUT_NAME,
 )
 
+# from: https://github.com/pyinstaller/pyinstaller/pull/3566
+# Without Info.plist: display normally with icon in the Dock.
+# With Info.plist LSUIElement=True: display normally with no icon in the Dock.
+# With Info.plist LSBackgroundOnly=True: no display nor icon in the Dock.
+
+info_plist = {
+    # "LSUIElement" : True,
+    "LSBackgroundOnly" : True
+}
 app = BUNDLE(
     main_coll,
+    info_plist=info_plist,
     name='GPT iMessage Bot.app',
     icon=None,
     bundle_identifier=None,
