@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 OUTPUT_NAME = "GPT iMessage Bot"
-
+icon = 'speech_bubble.icns' 
 
 main_analysis = Analysis(
     ['main.py'],
@@ -101,6 +101,6 @@ app = BUNDLE(
     main_coll,
     info_plist=info_plist,
     name='GPT iMessage Bot.app',
-    icon=None,
+    icon=icon,
     bundle_identifier=None,
 )
