@@ -90,15 +90,50 @@ class AutoResponder:
         focus_mode = self._get_focus_mode()
         messages = self.fetch_data.get_messages_between_dates(
             time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - self.config.delay_between_loops)))
-        # messages = filter(lambda message: message.is_from_me != 1, messages)
+        messages_from_me = filter(lambda message: message.is_from_me == 1, messages)
+        messages_from_others = filter(lambda message: message.is_from_me != 1, messages)
+        
+        # Messages from me
+        for message in messages_from_me:
+            single_chat = [ chat for chat in self.config.single_chats if message.user_id == chat.phone_number ]
+            group_chat = [ chat for chat in self.config.group_chats if message.user_id == chat.name ]
+            if single_chat and single_chat[0].enabled and single_chat[0].bot_trigger_command != '' and single_chat[0].bot_trigger_command in message.text:
+                message.text = message.text.replace(single_chat[0].bot_trigger_command, '')
+                prompt = self._build_text_chain_single_chat(message, single_chat[0])
+                response = self._generate_response(prompt)
+                if single_chat[0].emoji_pasta:
+                    response = self.emojipasta_generator.generate_emojipasta(response)
+                
+                self.logger.debug(f'Response generated for {single_chat[0].name}: {response}')
+                imessage.send([message.user_id], response)
+            elif group_chat and group_chat[0].enabled and group_chat[0].bot_trigger_command != '' and group_chat[0].bot_trigger_command in message.text:
+                message.text = message.text.replace(group_chat[0].bot_trigger_command, '')
+                prompt = self._build_text_chain_group_chat(message, group_chat[0])
+                response = self._generate_response(prompt)
+                if group_chat[0].emoji_pasta:
+                    response = self.emojipasta_generator.generate_emojipasta(response)
+                
+                self.logger.debug(f'Response generated for {group_chat[0].name}: {response}')
+                recipients = [recipient.phone_number for recipient in group_chat[0].recipients]
+                imessage.send(recipients, response)
+            elif not single_chat and not group_chat and self.config.default_single_chat.enabled and self.config.default_single_chat.bot_trigger_command in message.text:
+                message.text = message.text.replace(self.config.default_single_chat.bot_trigger_command, '')
+                prompt = self._build_text_chain_default_single_chat(message, self.config.default_single_chat)
+                response = self._generate_response(prompt)
+                if self.config.default_single_chat.emoji_pasta:
+                    response = self.emojipasta_generator.generate_emojipasta(response)
+                self.logger.debug(f'Response generated for {message.user_id}: {response}')
+                imessage.send([message.user_id], response)
 
-        for message in messages:
+        # Messages from others
+        for message in messages_from_others:
             self.logger.debug(f'Message: {message}')
             # IMPORTANT:
             # Single chats are identified by phone number. Group chats are identified by the group name
             single_chat = [ chat for chat in self.config.single_chats if message.user_id == chat.phone_number ]
             group_chat = [ chat for chat in self.config.group_chats if message.user_id == chat.name ]
-            if single_chat and single_chat[0].enabled:
+            if single_chat and single_chat[0].enabled and single_chat[0].bot_trigger_command in message.text:
+                message.text = message.text.replace(single_chat[0].bot_trigger_command, '')
                 prompt = self._build_text_chain_single_chat(message, single_chat[0])
                 response = self._generate_response(prompt)
                 if single_chat[0].emoji_pasta:
@@ -106,7 +141,8 @@ class AutoResponder:
 
                 self.logger.debug(f'Response generated for {single_chat[0].name}: {response}')
                 imessage.send([message.user_id], response) 
-            elif group_chat and group_chat[0].enabled:
+            elif group_chat and group_chat[0].enabled and group_chat[0].bot_trigger_command in message.text:
+                message.text = message.text.replace(group_chat[0].bot_trigger_command, '')
                 prompt = self._build_text_chain_group_chat(message, group_chat[0])
                 response = self._generate_response(prompt)
                 if group_chat[0].emoji_pasta:
@@ -114,7 +150,8 @@ class AutoResponder:
                 self.logger.debug(f'Response generated for {group_chat[0].name}: {response}')
                 recipients = [recipient.phone_number for recipient in group_chat[0].recipients]
                 imessage.send(recipients, response)
-            elif self.config.default_single_chat.enabled:
+            elif not single_chat and not group_chat and self.config.default_single_chat.enabled and self.config.default_single_chat.bot_trigger_command in message.text:
+                message.text = message.text.replace(self.config.default_single_chat.bot_trigger_command, '')
                 prompt = self._build_text_chain_default_single_chat(message, self.config.default_single_chat)
                 response = self._generate_response(prompt)
                 if self.config.default_single_chat.emoji_pasta:

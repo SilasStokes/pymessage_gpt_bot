@@ -4,7 +4,8 @@
     "delay_between_loops": 5,
     "personal_info": {
         "name": "<your name>",
-        "date_of_birth": "<your date of birth>"
+        "date_of_birth": "<your date of birth>",
+        "phone_number": "<your phone number>"
     },
     "single_chats": [
         {
