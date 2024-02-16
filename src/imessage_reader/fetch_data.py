@@ -14,7 +14,7 @@ import sys
 
 from os.path import expanduser
 
-from src.imessage_reader import common, create_sqlite, write_excel, data_container
+from . import common, create_sqlite, write_excel, data_container
 
 
 # noinspection PyMethodMayBeStatic
@@ -96,7 +96,7 @@ class FetchData:
 
             data.append(
                 data_container.MessageData(
-                    recipient, text, row[1], row[3], row[4], row[5]
+                    recipient, text, row[1], row[2], row[3], row[4], row[5]
                 )
             )
 

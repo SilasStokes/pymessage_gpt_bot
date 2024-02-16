@@ -1,0 +1,63 @@
+{
+    "openai_api_key": "<api key>",
+    "max_tokens": 1000,
+    "delay_between_loops": 5,
+    "personal_info": {
+        "name": "<your name>",
+        "date_of_birth": "<your date of birth>",
+        "phone_number": "<your phone number>"
+    },
+    "single_chats": [
+        {
+            "name": "<name 1>",
+            "phone_number": "<phone number 1>",
+            "about": "<information 1>",
+            "prompt": "<prompt>",
+            "context": true,
+            "enabled": false,
+            "only_reply_focus_mode": true,
+            "number_previous_messages": 14,
+            "emoji_pasta": false,
+            "bot_trigger_command": ""
+        }
+    ],
+    "default_single_chat": {
+        "about": "<information 1>",
+        "prompt": "<prompt>",
+        "context": false,
+        "enabled": false,
+        "only_reply_focus_mode": true,
+        "number_previous_messages": 0,
+        "emoji_pasta": false,
+        "bot_trigger_command": "!bot"
+    },
+    "group_chats": [
+        {
+            "name": "<name of groupchat>",
+            "prompt": "<prompt>",
+            "context": true,
+            "enabled": false,
+            "only_reply_focus_mode": true,
+            "number_previous_messages": 15,
+            "emoji_pasta": true,
+            "bot_trigger_command": "!bot",
+            "recipients": [
+                {
+                    "name": "<person name 1>",
+                    "phone_number": "<phone number 1>",
+                    "about": "<information 1>"
+                },
+                {
+                    "name": "<person name 2>",
+                    "phone_number": "<phone number 2>",
+                    "about": "<information 2>"
+                },
+                {
+                    "name": "<person name 3>",
+                    "phone_number": "<phone number 3>",
+                    "about": "<information 3>"
+                }
+            ]
+        }
+    ]
+}

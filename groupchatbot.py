@@ -6,7 +6,7 @@ import openai
 import argparse
 import json
 import logging
-from src.models import GroupchatConfig
+from autoresponder.models import GroupchatConfig
 from emojipasta.generator import EmojipastaGenerator
 
 logging.basicConfig(level=logging.DEBUG)

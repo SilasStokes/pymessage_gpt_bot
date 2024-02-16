@@ -6,7 +6,7 @@ import os
 import json
 import argparse
 import logging
-from src.models import AutoRespondConfig
+from autoresponder.models import AutoRespondConfig
 # from generator import EmojipastaGenerator
 from emojipasta.generator import EmojipastaGenerator
 

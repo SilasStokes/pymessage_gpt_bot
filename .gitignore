@@ -4,6 +4,7 @@ config.json
 __pycache__
 .DS_STORE
 .venv
+venv
 config.json
 contacts.vcf
 notes.md
