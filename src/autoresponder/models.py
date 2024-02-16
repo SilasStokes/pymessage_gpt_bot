@@ -6,6 +6,7 @@ from dataclass_wizard import JSONWizard
 class PersonalInfo:
     name: str
     date_of_birth: str
+    phone_number: str
 
 @dataclass
 class Recipient:
