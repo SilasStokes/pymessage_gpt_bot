@@ -13,6 +13,10 @@ rm -rf build
 rm -rf dist
 rm -rf temp
 rm -rf "/Applications/GPT iMessage Bot.app"
+rm -rf build
+rm -rf dist
+rm -rf temp
+rm -rf "/Applications/GPT iMessage Bot.app"
 
 SPEC_FILE="./createApp.spec"
 APP_NAME="./GPT iMessage Bot.app"
@@ -22,9 +26,12 @@ APP_INSTALLER_NAME="GPT iMessage Bot"
 # Step 1: Convert Python script to an application bundle
 # ---------------------------------------
 echo "Converting Python script to macOS app bundle..."
-echo "Converting Python script to macOS app bundle..."
 # The following command will create a standalone .app from your Python script
 pyinstaller ${SPEC_FILE}
+
+
+# /usr/bin/open dist/GPT\ iMessage\ Bot.app --stdout temp --stderr temp
+# exit
 
 
 # /usr/bin/open dist/GPT\ iMessage\ Bot.app --stdout temp --stderr temp
