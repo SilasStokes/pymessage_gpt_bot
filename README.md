@@ -1,11 +1,12 @@
 # iMessage Chat Bot - Powered by ChatGPT
 
-iMessage Chat Bot is a library / CLI to automate conversations via text. Use it as a funny tool to annoy friends,
+iMessage Chat Bot is a MacOS application that plugs the power of modern LLM's into iMessage.Use it as a funny tool to annoy friends,
 or something useful such as a personalized messaging system to inform your loved ones you are not available to chat.
 The chat bot uses *your* number to send the automated responses, simplifying the experience of automating and interacting with
-texts.
+texts. You can use it a python script or install the app from releases. 
 
 ## Usage
+The distributable app is a MacOS menubar app that will let you start and stop the chatbot running in the background.
 The chat bot utilizes a `json` file to help configure the settings and behavior when running the program. An example format for the
 `config.json` can be found [here](./configs/example-config.json). Below is also a rundown of each of the sections and explanation
 of their purpose.
@@ -51,12 +52,22 @@ of their purpose.
 
 This has to be ran on mac with iCloud account and iMessage setup and thus will appear to be sent from *you* rather than an external number. Also I believe that groupchat has to be already created. I initially tried to use twilio to power the texts but it looks like as of right now (April 2023) they have deprecated group messaging.
 
-## How to Setup
+## how to install:
+coming soon...
+
+
+## How to Setup for development
 1. Create virtual environment with `python -m venv .venv`
 2. Enable your virtual env with `source .venv/bin/activate`
 2. Install python packages with `pip install -r requirements.txt`
-4. Install the py-imessage-shortcuts package. You'll need to set up the shortcut by double clicking the `send-imessage.shortcut` and then selecting "Add shortcut" (the shortcut is from that repo - I did not create it).
+4. Install the py-imessage-shortcuts package. You'll need to set up the shortcut by double clicking the `send-imessage.shortcut` and then selecting "Add shortcut" (the shortcut is from that repo - I did not create it). 
 5. Create a Chat GPT API Key [here](https://platform.openai.com/api-keys) and add it to your config file. Alternatively, you can set the global variable in the command line: `export OPENAI_API_KEY=<your-api-key>`
 6. In order to read iMessage data, the application or terminal will need full disk access. iMessage data exists in `~/Library/Messages` which is protected. Go to `Settings -> Privacy & Security -> Full Disk Access` and select the application that should get access.
 7. Ensure iMessage text forwarding is enabled on your iPhone.
 8. Run the bot and pass your config with: `python src --config configs/example-config.json`
+
+## To bundle the application:
+1. Install pyinstaller (in your virtual environment): `pip install pyinstaller`
+2. Install (create-dmg)[https://github.com/create-dmg/create-dmg] onto you computer, easiest way is through the brew package manager (which you'll have to install seperately if you don't have it) `brew install create-dmg`
+3. Run the `make_dmg.sh` script. you may have to make it executable `chmod +x make_dmg.sh`, then `./make_dmg.sh`. This script runs both py installer and create-dmg to built the distributable .dmg file. 
+4. Find the .dmg inside the `dist/` folder.
