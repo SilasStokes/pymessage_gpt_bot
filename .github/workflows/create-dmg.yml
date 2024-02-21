@@ -1,0 +1,34 @@
+name: Create DMG File
+
+on:
+    push:
+        branches: [ main ]
+jobs:
+    create_dmg:
+        name: Create dmg
+        runs-on: macos-latest
+        steps:
+            # Copy example-config.json -> config.json in configs folder
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                python-version: '3.11'
+            - name: Install create-dmg
+              run: brew install create-dmg
+            - name: Create and Install Virtual Environment
+              run: |
+                pip3 install -r requirements.txt
+            - name: Make dmg
+              run: |
+                cp ./configs/example-config.json ./configs/config.json
+                ./make_dmg.sh
+            - name: Find DMG file
+              id: find_dmg
+              run: |
+                dmg_file=$(find dist/ -maxdepth 1 -type f -name "*.dmg")
+                echo "DMG_FILE=$dmg_file" >> $GITHUB_ENV
+            - name: Archive DMG as an artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: py-message-chat-gpt-dmg
+                path: ${{ env.DMG_FILE }}
