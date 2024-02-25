@@ -39,10 +39,10 @@ create-dmg \
     --volname "GPT iMessage Bot" \
     --volicon "speech_bubble.ico" \
     --window-pos 200 120 \
-    --window-size 600 300 \
-    --icon "speech_bubble.ico" 175 120 \
+    --window-size 800 400 \
+    --icon "Applications" 200 190 \
     --icon-size 100 \
-    --app-drop-link 425 120 \
+    --app-drop-link 200 190 \
     "./dist/GPT iMessage Bot.dmg" \
     ./dist/dmg/
 
