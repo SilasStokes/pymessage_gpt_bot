@@ -46,7 +46,6 @@ def kill_and_null_proc():
         bot_process = None
 
 
-
 def on_click_stop(_):
     kill_and_null_proc()
     start_button = app.menu[Menubar.START]
