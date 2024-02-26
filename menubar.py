@@ -5,6 +5,7 @@ import sys
 
 rumps.debug_mode(True)
 
+
 class RuntimeEnvironment():
 
     def __init__(self):
@@ -16,8 +17,8 @@ class RuntimeEnvironment():
             self.MAIN_NAME = 'main'
             # self.MAIN_PATH = self.WORKING_DIR
             self.MAIN_PATH = os.path.abspath(os.path.join(self.WORKING_DIR, '..'))
-            self.MAIN_EXE = os.path.join(self.MAIN_PATH, 'MacOS' ,self.MAIN_NAME)
-            self.PYTHON_EXE = f'python'
+            self.MAIN_EXE = os.path.join(self.MAIN_PATH, 'MacOS', self.MAIN_NAME)
+            self.PYTHON_EXE = 'python'
             self.POPEN_CMD = [self.MAIN_EXE, '--config', self.CONFIG_PATH]
         else:
             self.RUNNING_IN_INSTALLER = False
@@ -25,8 +26,9 @@ class RuntimeEnvironment():
             self.MAIN_NAME = 'main.py'
             self.MAIN_PATH = os.path.abspath(self.WORKING_DIR)
             self.MAIN_EXE = os.path.join(self.MAIN_PATH, self.MAIN_NAME)
-            self.PYTHON_EXE = f'.venv/bin/python'
+            self.PYTHON_EXE = '.venv/bin/python'
             self.POPEN_CMD = [self.PYTHON_EXE, self.MAIN_EXE, '--config', self.CONFIG_PATH]
+
 
 debug = True
 
@@ -38,6 +40,7 @@ class MenubarText:
     EDIT_CONFIG = 'Edit Config'
     QUIT = 'Quit'
 
+
 bot_process = None
 rte = RuntimeEnvironment()
 if debug:
@@ -46,12 +49,12 @@ if debug:
             print(f'{root}/{f}')
         break
 
+
 def kill_and_null_proc():
     global bot_process
     if bot_process is not None:
         bot_process.kill()
         bot_process = None
-
 
 
 def on_click_stop(_):
@@ -69,14 +72,17 @@ def on_click_stop(_):
 def on_click_edit_config(_):
     Popen(["open", "-e", rte.CONFIG_PATH])
 
+
 def on_click_restart(_):
     kill_and_null_proc()
     on_click_start(_)
+
 
 @rumps.clicked(MenubarText.QUIT)
 def clean_up_before_quit(_):
     kill_and_null_proc()
     rumps.quit_application()
+
 
 @rumps.clicked(MenubarText.START)
 def on_click_start(_):
@@ -90,11 +96,12 @@ def on_click_start(_):
     start_button.set_callback(None)
     bot_process = Popen(rte.POPEN_CMD, cwd=rte.WORKING_DIR)
 
+
 app = rumps.App('💬', quit_button=None)
 app.menu = [
     MenubarText.START,
     MenubarText.STOP,
-    MenubarText.RESTART, # update this to be stateful based on if process is not null
+    MenubarText.RESTART,  # update this to be stateful based on if process is not null
     MenubarText.EDIT_CONFIG,
     MenubarText.QUIT
 ]

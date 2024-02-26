@@ -1,5 +1,8 @@
 # iMessage Chat Bot - Powered by ChatGPT
 
+![Create DMG File](https://github.com/SilasStokes/pymessage_gpt_bot/actions/workflows/create-dmg.yml/badge.svg)
+![Flake8 Linting](https://github.com/SilasStokes/pymessage_gpt_bot/actions/workflows/flake8-lint.yml/badge.svg)
+
 iMessage Chat Bot is a MacOS application that plugs the power of modern LLM's into iMessage.Use it as a funny tool to annoy friends,
 or something useful such as a personalized messaging system to inform your loved ones you are not available to chat.
 The chat bot uses *your* number to send the automated responses, simplifying the experience of automating and interacting with

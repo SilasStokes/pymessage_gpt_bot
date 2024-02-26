@@ -29,21 +29,21 @@ class FetchData:
     # The SQL command
     SQL_CMD = (
         "SELECT "
-            "text, "
-            "datetime((date / 1000000000) + 978307200, 'unixepoch', 'localtime'),"
-            "handle.id, "
-            "handle.service, "
-            "message.destination_caller_id, "
-            "message.is_from_me, "
-            "message.attributedBody, "
-            "message.cache_roomnames, "
-            "chat.display_name "
+        "text, "
+        "datetime((date / 1000000000) + 978307200, 'unixepoch', 'localtime'),"
+        "handle.id, "
+        "handle.service, "
+        "message.destination_caller_id, "
+        "message.is_from_me, "
+        "message.attributedBody, "
+        "message.cache_roomnames, "
+        "chat.display_name "
         "FROM "
-            "message "
+        "message "
         "LEFT JOIN "
-            "handle on message.handle_id=handle.ROWID "
+        "handle on message.handle_id=handle.ROWID "
         "LEFT JOIN "
-            "chat ON message.cache_roomnames=chat.chat_identifier "
+        "chat ON message.cache_roomnames=chat.chat_identifier "
     )
 
     def __init__(self, system=None):
@@ -54,7 +54,7 @@ class FetchData:
         if self.operating_system != "MAC":
             sys.exit("Your operating system is not supported yet!")
 
-    def _read_database(self, sql_cmd:str = SQL_CMD) -> list[data_container.MessageData]:
+    def _read_database(self, sql_cmd: str = SQL_CMD) -> list[data_container.MessageData]:
         """
         Fetch data from the database and store the data in a list.
         :return: List containing the user id, messages, the service and the account
@@ -80,18 +80,20 @@ class FetchData:
             if text is None and row[6] is not None:
                 try:
                     text = row[6].split(b'NSString')[1]
-                    text = text[5:] # stripping some preamble which generally looks like this: b'\x01\x94\x84\x01+'
-                    
-                    if text[0] == 129: # this 129 is b'\x81, python indexes byte strings as ints, this is equivalent to text[0:1] == b'\x81'
-                        length = int.from_bytes(text[1:3], 'little') 
-                        text = text[3:length  + 3]
+                    # stripping some preamble which generally looks like this: b'\x01\x94\x84\x01+'
+                    text = text[5:]
+
+                    # this 129 is b'\x81, python indexes byte strings as ints, this is equivalent to text[0:1] == b'\x81'
+                    if text[0] == 129:
+                        length = int.from_bytes(text[1:3], 'little')
+                        text = text[3:length + 3]
                     else:
                         length = text[0]
                         text = text[1:length + 1]
                     text = text.decode()
-                except Exception as e:
+                except Exception as e:  # noqa: F841
                     pass
-                    
+
             recipient = row[2] if not row[8] else row[8]
 
             data.append(
@@ -143,7 +145,7 @@ class FetchData:
     def _export_sqlite(self, data: list):
         """
         Export data (create SQLite3 database)
-        :param data: message objects containig user id, message, date, service, account
+        :param data: message objects containing user id, message, date, service, account
         """
         file_path = expanduser("~") + "/Desktop/"
         cd = create_sqlite.CreateDatabase(data, file_path)
@@ -194,30 +196,30 @@ class FetchData:
 
         return data
 
-    def get_most_recent_messages(self, x:int = 10) -> list[data_container.MessageData]:
+    def get_most_recent_messages(self, x: int = 10) -> list[data_container.MessageData]:
         """
         return the x most recent texts from the database
-        :accepts: an integer that represents how many texts should be retrieved. 
-        :returns: list[data_container.MessageData] of length x that are in order from newest to oldest 
+        :accepts: an integer that represents how many texts should be retrieved.
+        :returns: list[data_container.MessageData] of length x that are in order from newest to oldest
         """
         sql_query = self.SQL_CMD + (
             "ORDER BY "
-                "message.date DESC "
+            "message.date DESC "
             "LIMIT " + str(x) + " "
             ";"
         )
         return self._read_database(sql_query)
 
-    def get_messages_from(self, contact_id:str = '+12223334444', num_records: int = -1) -> list[data_container.MessageData]:
+    def get_messages_from(self, contact_id: str = '+12223334444', num_records: int = -1) -> list[data_container.MessageData]:
         sql_query = self.SQL_CMD + (
             "WHERE "
-                f"handle.id = \"{contact_id}\" "
-                "OR "
-                f"message.cache_roomnames = \"{contact_id}\" "
-                "OR "
-                f"chat.display_name = \"{contact_id}\" "
+            f"handle.id = \"{contact_id}\" "
+            "OR "
+            f"message.cache_roomnames = \"{contact_id}\" "
+            "OR "
+            f"chat.display_name = \"{contact_id}\" "
             "ORDER BY "
-                "message.date DESC "
+            "message.date DESC "
         )
         if num_records != -1:
             sql_query = sql_query + f'LIMIT {num_records};'
@@ -225,8 +227,8 @@ class FetchData:
             sql_query = sql_query + ";"
 
         return self._read_database(sql_query)
-    
-    def get_messages_between_dates(self, date_start = None, date_end = None) -> list[data_container.MessageData]:
+
+    def get_messages_between_dates(self, date_start=None, date_end=None) -> list[data_container.MessageData]:
         """
         Dateformat should be: YYYY-MM-DD HH:MM:SS format, which can be done with the code::
 
@@ -238,9 +240,9 @@ class FetchData:
             time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - OFFSET))
 
         if date_end is not supplied, it will be assumed to be current time.
-        If not returning anything, and you suspect it should be, ensure that you dont have start and end flopped. 
+        If not returning anything, and you suspect it should be, ensure that you dont have start and end flopped.
         :return:
-        """ 
+        """
         from time import strftime, localtime, time, strptime
 
         if date_start is None:
@@ -251,27 +253,27 @@ class FetchData:
         except Exception as e:
             raise e
 
-
         try:
             _ = strptime(date_end, '%Y-%m-%d %H:%M:%S')
-        except Exception as e:
-            date_end = strftime('%Y-%m-%d %H:%M:%S',localtime(time())) # date end getting set to current time
+        except Exception as e:  # noqa: F841
+            # date end getting set to current time
+            date_end = strftime('%Y-%m-%d %H:%M:%S', localtime(time()))
 
         sql_query = self.SQL_CMD + (
             "WHERE "
-                "DATETIME((message.date / 1000000000) + 978307200, 'unixepoch', 'localtime') "
-                "BETWEEN "
-                    f"\"{date_start}\" "
-                "AND "
-                    f"\"{date_end}\" "
+            "DATETIME((message.date / 1000000000) + 978307200, 'unixepoch', 'localtime') "
+            "BETWEEN "
+            f"\"{date_start}\" "
+            "AND "
+            f"\"{date_end}\" "
             "ORDER BY "
-                "message.date DESC "
+            "message.date DESC "
             ";"
         )
 
         return self._read_database(sql_query)
 
-    def get_messages_between_dates_from(self, contact_id: str = '', date_start:str = None, date_end:str = None) -> list[data_container.MessageData]:
+    def get_messages_between_dates_from(self, contact_id: str = '', date_start: str = None, date_end: str = None) -> list[data_container.MessageData]:
         """
         Dateformat should be: YYYY-MM-DD HH:MM:SS format, which can be done with the code::
 
@@ -283,9 +285,9 @@ class FetchData:
             time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() - OFFSET))
 
         if date_end is not supplied, it will be assumed to be current time.
-        If not returning anything, and you suspect it should be, ensure that you dont have start and end flopped. 
+        If not returning anything, and you suspect it should be, ensure that you dont have start and end flopped.
         :return:
-        """ 
+        """
         from time import strftime, localtime, time, strptime
 
         if date_start is None:
@@ -298,27 +300,27 @@ class FetchData:
 
         try:
             _ = strptime(date_end, '%Y-%m-%d %H:%M:%S')
-        except Exception as e:
-            date_end = strftime('%Y-%m-%d %H:%M:%S',localtime(time())) # date end getting set to current time
-
+        except Exception as e:  # noqa: F841
+            # date end getting set to current time
+            date_end = strftime('%Y-%m-%d %H:%M:%S', localtime(time()))
 
         sql_query = self.SQL_CMD + (
             "WHERE "
-                "DATETIME((message.date / 1000000000) + 978307200, 'unixepoch', 'localtime') "
-                "BETWEEN "
-                    f"\"{date_start}\" "
-                "AND "
-                    f"\"{date_end}\" "
-                "AND "
-                "( "
-                    f"handle.id = \"{contact_id}\" "
-                    "OR "
-                    f"message.cache_roomnames = \"{contact_id}\" "
-                    "OR "
-                    f"chat.display_name = \"{contact_id}\" "
-                ") "
+            "DATETIME((message.date / 1000000000) + 978307200, 'unixepoch', 'localtime') "
+            "BETWEEN "
+            f"\"{date_start}\" "
+            "AND "
+            f"\"{date_end}\" "
+            "AND "
+            "( "
+            f"handle.id = \"{contact_id}\" "
+            "OR "
+            f"message.cache_roomnames = \"{contact_id}\" "
+            "OR "
+            f"chat.display_name = \"{contact_id}\" "
+            ") "
             "ORDER BY "
-                "message.date DESC "
+            "message.date DESC "
             ";"
         )
 
