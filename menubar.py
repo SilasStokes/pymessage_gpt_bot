@@ -2,23 +2,27 @@ import rumps
 from subprocess import Popen
 import os
 import sys
+import src.windows.pop_up as pop_up
+from PyQt5 import QtWidgets
+from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckTestFail
 
-rumps.debug_mode(True)
 
 class RuntimeEnvironment():
-
     def __init__(self):
+
         self.WORKING_DIR = os.path.dirname(os.path.realpath(__file__))
 
         if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
             self.RUNNING_IN_INSTALLER = True
-            self.CONFIG_PATH = os.path.join(self.WORKING_DIR, 'config.json')
+            self.CONFIG_PATH = os.path.join(self.WORKING_DIR, 'assets', 'config.json')
             self.MAIN_NAME = 'main'
             # self.MAIN_PATH = self.WORKING_DIR
             self.MAIN_PATH = os.path.abspath(os.path.join(self.WORKING_DIR, '..'))
             self.MAIN_EXE = os.path.join(self.MAIN_PATH, 'MacOS' ,self.MAIN_NAME)
             self.PYTHON_EXE = f'python'
             self.POPEN_CMD = [self.MAIN_EXE, '--config', self.CONFIG_PATH]
+            self.ASSET_PATH = os.path.join(self.WORKING_DIR, 'assets', 'instructions.txt')
+            self.INSTRUCTION_CMD = ["open", "-e", os.path.join(self.WORKING_DIR, 'assets', 'instructions.txt')]
         else:
             self.RUNNING_IN_INSTALLER = False
             self.CONFIG_PATH = os.path.join(self.WORKING_DIR, 'configs', 'config.json')
@@ -27,9 +31,8 @@ class RuntimeEnvironment():
             self.MAIN_EXE = os.path.join(self.MAIN_PATH, self.MAIN_NAME)
             self.PYTHON_EXE = f'.venv/bin/python'
             self.POPEN_CMD = [self.PYTHON_EXE, self.MAIN_EXE, '--config', self.CONFIG_PATH]
-
-debug = True
-
+            self.ASSET_PATH = os.path.join(self.WORKING_DIR, 'assets/instructions.txt')
+            self.INSTRUCTION_CMD = ["open", "-e", os.path.join('assets','instructions.txt')]
 
 class MenubarText:
     START = 'Start'
@@ -37,15 +40,34 @@ class MenubarText:
     STOP = 'Stop'
     EDIT_CONFIG = 'Edit Config'
     QUIT = 'Quit'
+    REVEAL_FILES = 'Reveal Files'
 
+debug = True
+rumps.debug_mode(debug)
 bot_process = None
 rte = RuntimeEnvironment()
-if debug:
-    for root, _, f in os.walk(rte.WORKING_DIR):
-        for file in f:
-            print(f'{root}/{f}')
-        break
 
+##################################################
+####### SETUP CHECK ##############################
+##################################################
+checks = [
+    CheckConfigExists(config_path=rte.CONFIG_PATH),
+    CheckOpenaiKey(config_path=rte.CONFIG_PATH),
+    CheckChatdbAccess(),
+    # CheckTestFail()
+]
+
+if not all(check.success for check in checks):
+    app = QtWidgets.QApplication(sys.argv)
+    w = pop_up.MainWindow(checks)
+    app.exec()
+    quit()
+
+
+
+##################################################
+####### PROGRAM START ############################
+##################################################
 def kill_and_null_proc():
     global bot_process
     if bot_process is not None:
@@ -78,6 +100,12 @@ def clean_up_before_quit(_):
     kill_and_null_proc()
     rumps.quit_application()
 
+@rumps.clicked(MenubarText.REVEAL_FILES)
+def clean_up_before_quit(_):
+    Popen(["open", "-R", rte.ASSET_PATH])
+    # kill_and_null_proc()
+    # rumps.quit_application()
+
 @rumps.clicked(MenubarText.START)
 def on_click_start(_):
     global bot_process
@@ -94,8 +122,9 @@ app = rumps.App('💬', quit_button=None)
 app.menu = [
     MenubarText.START,
     MenubarText.STOP,
-    MenubarText.RESTART, # update this to be stateful based on if process is not null
+    MenubarText.RESTART, 
     MenubarText.EDIT_CONFIG,
+    MenubarText.REVEAL_FILES,
     MenubarText.QUIT
 ]
 

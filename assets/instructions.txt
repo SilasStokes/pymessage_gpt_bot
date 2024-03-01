@@ -1,0 +1,13 @@
+# Hello~!
+
+This window has opened because it was unable to access certain features
+Make sure you have completed all the installation instructions below:
+
+1. Give the app full disk permission (this allows us to query the iMessage database for new texts):
+    Settings -> Privacy & Security -> Full Disk Access -> GPT Message Bot
+2. Install the MacOS shortcut that allows us to automatically send messages. This can be found by selecting "Reveal Files" in the menubar drop down.
+    a. Download send-imessage.shortcut and open it using Finder.
+    b. Click the blue Add Shortcut button (you can use the 3-dot menu to inspect the steps executed if you desire).
+    c. Install py-imessage-shortcuts using pip:
+
+3. Once those are done, quit and re-rerun the app.

@@ -26,6 +26,7 @@ echo "Converting Python script to macOS app bundle..."
 pyinstaller ${SPEC_FILE}
 
 
+# use this shell command to be able to monitor the logging of the application once it is in an app form.
 # /usr/bin/open dist/GPT\ iMessage\ Bot.app --stdout temp --stderr temp
 # exit
 
@@ -43,7 +44,7 @@ cp -r "dist/GPT iMessage Bot.app" dist/dmg
 # Ensure you have 'create-dmg' installed. If not, install using 'brew install create-dmg'
 create-dmg \
     --volname "GPT iMessage Bot" \
-    --volicon "speech_bubble.ico" \
+    --volicon "assets/speech_bubble.ico" \
     --window-pos 200 120 \
     --window-size 800 400 \
     --icon "Applications" 200 190 \

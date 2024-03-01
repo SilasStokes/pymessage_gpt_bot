@@ -1,15 +1,18 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 OUTPUT_NAME = "GPT iMessage Bot"
-icon = 'speech_bubble.icns' 
+icon = './assets/speech_bubble.icns'
+
 
 main_analysis = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
     datas=[
-        ('README.md', '.'),
-        ('configs/config.json', '.'),
+        ('README.md', './assets/'),
+        ('configs/config.json', './assets/'),
+        ('assets/instructions.txt', './assets/'),
+        ('assets/send-imessage.shortcut', './assets/'),
     ],
     hiddenimports=[],
     hookspath=[],

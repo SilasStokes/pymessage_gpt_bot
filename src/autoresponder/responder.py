@@ -1,6 +1,6 @@
 from .models import Configuration, SingleChat, GroupChat, DefaultSingleChat
-from imessage_reader.fetch_data import FetchData
-from imessage_reader.data_container import MessageData
+from src.imessage_reader.fetch_data import FetchData
+from src.imessage_reader.data_container import MessageData
 from emojipasta import Emojipasta
 
 import imessage
