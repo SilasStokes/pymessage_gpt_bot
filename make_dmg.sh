@@ -25,6 +25,8 @@ echo "Converting Python script to macOS app bundle..."
 # The following command will create a standalone .app from your Python script
 pyinstaller ${SPEC_FILE}
 
+exit
+
 
 # use this shell command to be able to monitor the logging of the application once it is in an app form.
 # /usr/bin/open dist/GPT\ iMessage\ Bot.app --stdout temp --stderr temp

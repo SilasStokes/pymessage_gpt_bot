@@ -1,0 +1,22 @@
+DEBUG:httpx:load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG:httpx:load_verify_locations cafile='/Users/si/code/kyle/pymessage_gpt_bot/.venv/lib/python3.11/site-packages/certifi/cacert.pem'
+DEBUG:openai._base_client:Request options: {'method': 'get', 'url': '/models', 'json_data': None, 'post_parser': <function SyncAPIClient._request_api_list.<locals>._parser at 0x12f75c860>}
+DEBUG:httpcore.connection:connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x12f778550>
+DEBUG:httpcore.connection:start_tls.started ssl_context=<ssl.SSLContext object at 0x12f4b0710> server_hostname='api.openai.com' timeout=5.0
+DEBUG:httpcore.connection:start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x12f778610>
+DEBUG:httpcore.http11:send_request_headers.started request=<Request [b'GET']>
+DEBUG:httpcore.http11:send_request_headers.complete
+DEBUG:httpcore.http11:send_request_body.started request=<Request [b'GET']>
+DEBUG:httpcore.http11:send_request_body.complete
+DEBUG:httpcore.http11:receive_response_headers.started request=<Request [b'GET']>
+DEBUG:httpcore.http11:receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Sun, 03 Mar 2024 06:46:22 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-version', b'2020-10-01'), (b'x-request-id', b'req_ae29415f0e74b6c184ef5a65db5801cb'), (b'openai-processing-ms', b'97'), (b'access-control-allow-origin', b'*'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=ba3YygZTye2USwR5KdgV0MK2beuKhH2zZNRCrHRKjEU-1709448382-1.0.1.1-aBc_nl6Fl0J8j6ma1Q4Ln8hmCbQL1IZM3uYR1yjA5UJupK2ixU1KerRoOIN6apm4hbdYTMGrfD445eEeHQtEKw; path=/; expires=Sun, 03-Mar-24 07:16:22 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=w.LUle2foYVPuR7k4lKgcRAwyUCX1gJmFL9QvuT0Z2A-1709448382557-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'85e7ab459a9315d8-SJC'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 200 OK"
+DEBUG:httpcore.http11:receive_response_body.started request=<Request [b'GET']>
+DEBUG:httpcore.http11:receive_response_body.complete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:openai._base_client:HTTP Request: GET https://api.openai.com/v1/models "200 OK"
+INFO:src.autoresponder.logger:Loading configuration from /Users/si/code/kyle/pymessage_gpt_bot/configs/config.json
+DEBUG:httpx:load_ssl_context verify=True cert=None trust_env=True http2=False
+DEBUG:httpx:load_verify_locations cafile='/Users/si/code/kyle/pymessage_gpt_bot/.venv/lib/python3.11/site-packages/certifi/cacert.pem'

@@ -1,4 +1,17 @@
+import sys
 from src.setup_checks import SetupCheckBase
+from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists, CheckTestFail
+from src.runtime_environment import CONFIG_PATH
+from src.autoresponder.logger import logger
+logger.debug(f'error_popup module loaded')
+
+checks = [
+    CheckConfigExists(config_path=CONFIG_PATH),
+    CheckOpenaiKey(config_path=CONFIG_PATH),
+    CheckChatdbAccess(),
+    CheckShortcutExists(),
+    CheckTestFail()
+]
 from PyQt5 import QtWidgets
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -14,8 +27,8 @@ class MainWindow(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout()
         central_widget.setLayout(layout)
 
-        message_label = QtWidgets.QLabel("<h2>It looks like GPT iMessage Bot is being ran without being fully set up.</h2>"
-                                         "<h3>Make sure you have completed all the installation instructions below:</h3>", self)
+        message_label =QtWidgets.QLabel("<h2>It looks like GPT iMessage Bot is being ran without being fully set up.</h2>"
+                                        "<h3>Make sure you have completed all the installation instructions below:</h3>", self)
         layout.addWidget(message_label)
         for check in checks:
             if check.success:
@@ -41,7 +54,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show()
 
 if __name__ == '__main__':
-    import sys
+    logger.debug(f'error_popup main instantiated')
     app = QtWidgets.QApplication(sys.argv)
-    w = MainWindow()
+    app.setApplicationName("iMessage GPT Bot Setup Window")
+    app.setApplicationDisplayName("iMessage GPT Bot Setup Window")
+    w = MainWindow(checks)
     sys.exit(app.exec_())
+
+    # app = QtWidgets.QApplication(sys.argv)
+    # w = MainWindow()
+    # sys.exit(app.exec_())

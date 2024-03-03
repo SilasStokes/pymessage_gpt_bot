@@ -2,10 +2,10 @@
 
 OUTPUT_NAME = "GPT iMessage Bot"
 icon = './assets/speech_bubble.icns'
+DEBUG = True
 
-
-main_analysis = Analysis(
-    ['main.py'],
+bot_analysis = Analysis(
+    ['bot.py'],
     pathex=[],
     binaries=[],
     datas=[
@@ -35,18 +35,32 @@ menubar_analysis = Analysis(
     noarchive=False,
 )
 
-MERGE( (menubar_analysis, 'menubar', 'menubar'), (main_analysis, 'main', 'main'))
-# MERGE( (main_analysis, 'main', 'main'), (menubar_analysis, 'menubar', 'menubar'))
+error_popup_analysis = Analysis(
+    ['error_popup.py'],
+    pathex=[],
+    binaries=[],
+    datas=[],
+    hiddenimports=[],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=[],
+    noarchive=False,
+)
 
-main_pyz = PYZ(main_analysis.pure)
+MERGE( (menubar_analysis, 'menubar', 'menubar'), (bot_analysis, 'bot', 'bot'), (error_popup_analysis, 'error_popup', 'error_popup'))
 
-main_exe = EXE(
-    main_pyz,
-    main_analysis.scripts,
+bot_pyz = PYZ(bot_analysis.pure)
+menubar_pyz = PYZ(menubar_analysis.pure)
+error_popup_pyz = PYZ(error_popup_analysis.pure)
+
+bot_exe = EXE(
+    bot_pyz,
+    bot_analysis.scripts,
     [],
     exclude_binaries=True,
-    name='main',
-    debug=True,
+    name='bot',
+    debug=DEBUG,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
@@ -57,7 +71,6 @@ main_exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
-menubar_pyz = PYZ(menubar_analysis.pure)
 
 menubar_exe = EXE(
     menubar_pyz,
@@ -65,7 +78,25 @@ menubar_exe = EXE(
     [],
     exclude_binaries=True,
     name='menubar',
-    debug=False,
+    debug=DEBUG,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    # console=True,
+    console=False,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+)
+error_popup_exe = EXE(
+    error_popup_pyz,
+    error_popup_analysis.scripts,
+    [],
+    exclude_binaries=True,
+    name='error_popup',
+    debug=DEBUG,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
@@ -78,13 +109,16 @@ menubar_exe = EXE(
     entitlements_file=None,
 )
 
-main_coll = COLLECT(
+bot_coll = COLLECT(
     menubar_exe,
     menubar_analysis.binaries,
     menubar_analysis.datas,
-    main_exe,
-    main_analysis.binaries,
-    main_analysis.datas,
+    bot_exe,
+    bot_analysis.binaries,
+    bot_analysis.datas,
+    error_popup_exe,
+    error_popup_analysis.binaries,
+    error_popup_analysis.datas,
     strip=False,
     upx=True,
     upx_exclude=[],
@@ -101,7 +135,7 @@ info_plist = {
     "LSBackgroundOnly" : True
 }
 app = BUNDLE(
-    main_coll,
+    bot_coll,
     info_plist=info_plist,
     name='GPT iMessage Bot.app',
     icon=icon,

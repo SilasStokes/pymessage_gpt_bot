@@ -7,13 +7,15 @@ from src.autoresponder import logger
 from src.autoresponder import Configuration
 from src.autoresponder import AutoResponder
 
-if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-    DEFAULT_CONFIG_LOCATION = f'{os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "config.json")}'
-else:
-    DEFAULT_CONFIG_LOCATION = f'{os.path.join(os.path.dirname(os.path.realpath(__file__)), "configs", "config.json")}'
+from src.runtime_environment import CONFIG_PATH
+
+# if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+#     DEFAULT_CONFIG_LOCATION = f'{os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "config.json")}'
+# else:
+#     DEFAULT_CONFIG_LOCATION = f'{os.path.join(os.path.dirname(os.path.realpath(__file__)), "configs", "config.json")}'
 
 _parser = argparse.ArgumentParser(description='Configuration details for the autoresponder')
-_parser.add_argument('--config', '-C', help='Path to the configuration file (JSON format)', default=DEFAULT_CONFIG_LOCATION)
+_parser.add_argument('--config', '-C', help='Path to the configuration file (JSON format)', default=CONFIG_PATH)
 _args = _parser.parse_args()
 
 try:
