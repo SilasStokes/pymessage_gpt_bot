@@ -30,7 +30,15 @@ class CheckOpenaiKey(SetupCheckBase):
 
     def __init__(self, config_path: str):
         self.config_path = config_path
-        self.check_name = "Verifying iMessage Database Access"
-        self.instructions = ""
+        self.check_name = "Verifying OpenAI API Access"
         self.success, self.error_reason = self._check_setup()
+        self.instructions = [
+            "Create an account if you don't have one",
+            "Navigate to your dashboard",
+            "Copy your API key",
+            "Click okay on this window",
+            "Use the iMessage Bot drop down to \"reveal files\""
+            "Paste the API key in the field that reads \"openai_api_key\"",
+            "if you've already done these steps, that means the request to openAI is failing, check the error message and the log"
+        ]
 

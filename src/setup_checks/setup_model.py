@@ -6,7 +6,7 @@ class SetupCheckBase(ABC):
     check_name: str 
     success: bool
     error_reason: str 
-    instructions: str
+    instructions: list[str]
 
     @abstractmethod
     def __init__(self):

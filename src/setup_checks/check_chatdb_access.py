@@ -14,5 +14,11 @@ class CheckChatdbAccess(SetupCheckBase):
 
     def __init__(self):
         self.check_name = "Verifying iMessage Database Access"
-        self.instructions = ""
         self.success, self.error_reason = self._check_setup()
+
+        self.instructions = [
+            "iMessage Bot needs full disk access in order to be able to read messages ",
+            "Go to System Settings -> Security -> Full Disk Access",
+            "If you don't see iMessage GPT Bot, click the + icon and manually add from your Application folder",
+            "Click the slider to give access"
+        ]

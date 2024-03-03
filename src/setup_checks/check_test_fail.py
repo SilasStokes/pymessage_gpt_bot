@@ -6,6 +6,10 @@ class CheckTestFail(SetupCheckBase):
 
     def __init__(self):
         self.check_name = "intentionally failing"
-        self.instructions = ""
         self.success, self.error_reason = self._check_setup()
 
+        self.instructions = [
+            "step one",
+            "step two",
+            "Step three"
+        ]

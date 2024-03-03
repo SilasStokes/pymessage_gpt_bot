@@ -4,7 +4,7 @@ import os
 import sys
 import src.windows.pop_up as pop_up
 from PyQt5 import QtWidgets
-from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckTestFail
+from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists, CheckTestFail
 
 
 class RuntimeEnvironment():
@@ -54,14 +54,16 @@ checks = [
     CheckConfigExists(config_path=rte.CONFIG_PATH),
     CheckOpenaiKey(config_path=rte.CONFIG_PATH),
     CheckChatdbAccess(),
-    # CheckTestFail()
+    CheckShortcutExists(),
+    CheckTestFail()
 ]
 
 if not all(check.success for check in checks):
     app = QtWidgets.QApplication(sys.argv)
     w = pop_up.MainWindow(checks)
     app.exec()
-    quit()
+
+# quit()
 
 
 

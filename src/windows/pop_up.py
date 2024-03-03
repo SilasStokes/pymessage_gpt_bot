@@ -1,7 +1,8 @@
+from src.setup_checks import SetupCheckBase
 from PyQt5 import QtWidgets
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, checks):
+    def __init__(self, checks: list[SetupCheckBase]):
         super().__init__()
 
         self.setWindowTitle("iMessage GPT Bot")
@@ -28,9 +29,14 @@ class MainWindow(QtWidgets.QMainWindow):
             if not check.success:
                 error_reason = QtWidgets.QLabel(f"<h3>{check.error_reason}</h3>", self)
                 layout.addWidget(error_reason)
-            
-            instructions = QtWidgets.QLabel(f"<h3>instructions</h3>", self)
-            layout.addWidget(instructions)
+
+                for i, instruction in enumerate(check.instructions):
+                    instruction_widget = QtWidgets.QLabel(f"<h3>{i}. {instruction}</h3>", self)
+                    layout.addWidget(instruction_widget)
+
+        close_button = QtWidgets.QPushButton("Close Window", self)
+        close_button.clicked.connect(self.close)
+        layout.addWidget(close_button)
 
         self.show()
 
