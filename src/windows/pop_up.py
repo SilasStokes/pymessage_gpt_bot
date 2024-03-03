@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 layout.addWidget(error_reason)
 
                 for i, instruction in enumerate(check.instructions):
-                    instruction_widget = QtWidgets.QLabel(f"<h3>{i}. {instruction}</h3>", self)
+                    instruction_widget = QtWidgets.QLabel(f"<h4>{i}. {instruction}</h4>", self)
                     layout.addWidget(instruction_widget)
 
         close_button = QtWidgets.QPushButton("Close Window", self)

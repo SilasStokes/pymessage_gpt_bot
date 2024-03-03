@@ -60,8 +60,11 @@ checks = [
 
 if not all(check.success for check in checks):
     app = QtWidgets.QApplication(sys.argv)
+    app.setApplicationName("iMessage GPT Bot Setup Window")
+    app.setApplicationDisplayName("iMessage GPT Bot Setup Window")
     w = pop_up.MainWindow(checks)
     app.exec()
+    app.exit()
 
 # quit()
 
