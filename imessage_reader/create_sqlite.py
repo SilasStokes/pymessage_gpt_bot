@@ -19,7 +19,7 @@ class CreateDatabase:
         init function of this class
         :param imessage_data: List with MessageData objects
                 containing user id, text, date, service and account
-        :param file_path: The path to the loaction of the Excel file
+        :param file_path: The path to the location of the Excel file
         """
         self.imessage_data = imessage_data
         self.file_path = file_path
@@ -42,7 +42,7 @@ class CreateDatabase:
         message TEXT,
         date TEXT,
         service TEXT,
-        destination_caller_id TEXT, 
+        destination_caller_id TEXT,
         is_from_me TEXT)"""
         )
 

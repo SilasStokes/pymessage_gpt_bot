@@ -13,11 +13,12 @@ jobs:
             - uses: actions/setup-python@v5
               with:
                 python-version: '3.11'
+                cache: 'pip'
             - name: Install create-dmg
               run: brew install create-dmg
             - name: Create and Install Virtual Environment
               run: |
-                pip3 install -r requirements.txt
+                pip install -r requirements.txt
             - name: Make dmg
               run: |
                 cp ./configs/example-config.json ./configs/config.json
