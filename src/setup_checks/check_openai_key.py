@@ -24,7 +24,7 @@ class CheckOpenaiKey(SetupCheckBase):
         except openai.AuthenticationError:
             return False, "could not authenticate with supplied openai key"
         except Exception as e:
-            return False, f"Failed doing test connection to openai. Error: {e}"
+            return False, f"Failed doing test connection to openai. Error: \"{e}\", do you have internet connection?"
         return True, ""
 
 
@@ -37,7 +37,8 @@ class CheckOpenaiKey(SetupCheckBase):
             "Navigate to your dashboard",
             "Copy your API key",
             "Click okay on this window",
-            "Use the iMessage Bot drop down to \"reveal files\""
+            "Use the iMessage Bot drop down to \"reveal files\"",
+            "Open `config.json` in your favorite text editor",
             "Paste the API key in the field that reads \"openai_api_key\"",
             "if you've already done these steps, that means the request to openAI is failing, check the error message and the log"
         ]

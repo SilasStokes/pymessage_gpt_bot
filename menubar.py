@@ -1,7 +1,7 @@
 import rumps
 from subprocess import Popen
 import error_popup as error_popup
-from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists, CheckTestFail
+from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists
 from src.runtime_environment import CONFIG_PATH, BOT_POPEN_CMD, INSTRUCTIONS_PATH, WORKING_DIR, DEBUG, POPUP_POPEN_CMD
 from src.autoresponder.logger import logger
 
@@ -27,8 +27,7 @@ checks = [
     CheckConfigExists(config_path=CONFIG_PATH),
     CheckOpenaiKey(config_path=CONFIG_PATH),
     CheckChatdbAccess(),
-    CheckShortcutExists(),
-    CheckTestFail()
+    CheckShortcutExists()
 ]
 
 if not all(check.success for check in checks):

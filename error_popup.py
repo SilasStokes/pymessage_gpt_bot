@@ -1,6 +1,6 @@
 import sys
 from src.setup_checks import SetupCheckBase
-from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists, CheckTestFail
+from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists
 from src.runtime_environment import CONFIG_PATH
 from src.autoresponder.logger import logger
 logger.debug(f'error_popup module loaded')
@@ -9,9 +9,9 @@ checks = [
     CheckConfigExists(config_path=CONFIG_PATH),
     CheckOpenaiKey(config_path=CONFIG_PATH),
     CheckChatdbAccess(),
-    CheckShortcutExists(),
-    CheckTestFail()
+    CheckShortcutExists()
 ]
+
 from PyQt5 import QtWidgets
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -27,7 +27,7 @@ class MainWindow(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout()
         central_widget.setLayout(layout)
 
-        message_label =QtWidgets.QLabel("<h2>It looks like GPT iMessage Bot is being ran without being fully set up.</h2>"
+        message_label = QtWidgets.QLabel("<h2>GPT iMessage Bot is being ran without being fully set up.</h2>"
                                         "<h3>Make sure you have completed all the installation instructions below:</h3>", self)
         layout.addWidget(message_label)
         for check in checks:
@@ -37,15 +37,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 check_name = f"🚫 {check.check_name}"
 
             label = QtWidgets.QLabel(f"<h3>{check_name}</h3>", self)
+            # label.setStyleSheet("background-color: yellow")
             layout.addWidget(label)
 
             if not check.success:
-                error_reason = QtWidgets.QLabel(f"<h3>{check.error_reason}</h3>", self)
+                error_reason = QtWidgets.QLabel(f"<h3>\t\tError Reason: {check.error_reason}</h3>", self)
+                error_reason.setStyleSheet("padding-left:30px;")
                 layout.addWidget(error_reason)
 
                 for i, instruction in enumerate(check.instructions):
-                    instruction_widget = QtWidgets.QLabel(f"<h4>{i}. {instruction}</h4>", self)
+                    instruction_widget = QtWidgets.QLabel(f"<h4>\t\t{i}. {instruction}</h4>", self)
+                    instruction_widget.setStyleSheet("padding-left:30px;")
                     layout.addWidget(instruction_widget)
+
 
         close_button = QtWidgets.QPushButton("Close Window", self)
         close_button.clicked.connect(self.close)
