@@ -26,7 +26,6 @@ class Platform(Enum):
     MAC = 2
     WINDOWS = 3
 
-
 def get_platform() -> str:
     """
     Get the current operating system.
@@ -55,4 +54,4 @@ def fetch_db_data(db, command) -> list:
         cur.execute(command)
         return cur.fetchall()
     except Exception as e:
-        sys.exit("Error reading the database: %s" % e)
+        raise e

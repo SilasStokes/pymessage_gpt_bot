@@ -71,3 +71,4 @@ vobject==0.9.6.1
 wcwidth==0.2.6
 Werkzeug==2.2.2
 yarl==1.8.2
+PyQt5==5.15.10

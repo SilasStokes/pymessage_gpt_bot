@@ -29,6 +29,10 @@ pyinstaller ${SPEC_FILE}
 # /usr/bin/open dist/GPT\ iMessage\ Bot.app --stdout temp --stderr temp
 # exit
 
+
+# /usr/bin/open dist/GPT\ iMessage\ Bot.app --stdout temp --stderr temp
+# exit
+
 # ---------------------------------------
 # Step 2: Convert the application bundle to a DMG (macOS disk image)
 # ---------------------------------------
@@ -43,7 +47,7 @@ cp -r "dist/GPT iMessage Bot.app" dist/dmg
 # Ensure you have 'create-dmg' installed. If not, install using 'brew install create-dmg'
 create-dmg \
     --volname "GPT iMessage Bot" \
-    --volicon "speech_bubble.ico" \
+    --volicon "assets/speech_bubble.ico" \
     --window-pos 200 120 \
     --window-size 800 400 \
     --icon "Applications" 200 190 \
@@ -51,4 +55,3 @@ create-dmg \
     --app-drop-link 200 190 \
     "./dist/GPT iMessage Bot.dmg" \
     ./dist/dmg/
-
