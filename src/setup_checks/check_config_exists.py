@@ -1,6 +1,7 @@
 
 from .setup_model import SetupCheckBase
 
+
 class CheckConfigExists(SetupCheckBase):
     def _check_setup(self):
         try:

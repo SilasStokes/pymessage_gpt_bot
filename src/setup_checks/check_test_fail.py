@@ -1,4 +1,6 @@
 from .setup_model import SetupCheckBase
+
+
 class CheckTestFail(SetupCheckBase):
 
     def _check_setup(self):

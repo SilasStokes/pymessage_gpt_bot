@@ -3,10 +3,11 @@ from .setup_model import SetupCheckBase
 import os
 
 
-SHORTCUTS_DB_PATH = os.path.join(os.path.expanduser('~'), 
-                                'Library', 'Shortcuts', "Shortcuts.sqlite")
+SHORTCUTS_DB_PATH = os.path.join(os.path.expanduser('~'),
+                                 'Library', 'Shortcuts', "Shortcuts.sqlite")
 SHORTCUT_NAME = 'send-imessage'
 SQL_CMD = f'SELECT ZNAME FROM ZSHORTCUT WHERE ZNAME LIKE "{SHORTCUT_NAME}";'
+
 
 class CheckShortcutExists(SetupCheckBase):
 
@@ -17,14 +18,13 @@ class CheckShortcutExists(SetupCheckBase):
             cur = conn.cursor()
             cur.execute(SQL_CMD)
             shortcuts = cur.fetchall()
-            
+
             if len(shortcuts) > 0:
                 return True, ""
             else:
                 return False, "send-imessage shortcut not found in shortcut database"
         except Exception as e:
             return False, f"Could not access shortcut database at {SHORTCUTS_DB_PATH} to check if send-imessage exists, error: {e}"
-
 
     def __init__(self):
         self.check_name = "Verifying the send message shortcut works"

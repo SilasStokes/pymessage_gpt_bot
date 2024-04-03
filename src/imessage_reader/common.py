@@ -10,7 +10,6 @@ Date modified: February 26th, 2022
 
 import platform
 import sqlite3
-import sys
 from enum import Enum
 
 VERSION = "0.4.0"
@@ -26,11 +25,13 @@ class Platform(Enum):
     MAC = 2
     WINDOWS = 3
 
+
 def get_platform() -> str:
     """
     Get the current operating system.
     :return: The operating system this program is running on
     """
+
     system = platform.system()
     if system == "Linux":
         return str(Platform.LINUX.name)

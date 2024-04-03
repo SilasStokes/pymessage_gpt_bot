@@ -3,6 +3,7 @@ import json
 from src.autoresponder import Configuration
 from .setup_model import SetupCheckBase
 
+
 class CheckOpenaiKey(SetupCheckBase):
 
     def _check_setup(self):
@@ -27,7 +28,6 @@ class CheckOpenaiKey(SetupCheckBase):
             return False, f"Failed doing test connection to openai. Error: \"{e}\", do you have internet connection?"
         return True, ""
 
-
     def __init__(self, config_path: str):
         self.config_path = config_path
         self.check_name = "Verifying OpenAI API Access"
@@ -42,4 +42,3 @@ class CheckOpenaiKey(SetupCheckBase):
             "Paste the API key in the field that reads \"openai_api_key\"",
             "if you've already done these steps, that means the request to openAI is failing, check the error message and the log"
         ]
-
