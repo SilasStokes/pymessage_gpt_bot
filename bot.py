@@ -1,7 +1,5 @@
 import argparse
 import json
-import os
-import sys
 
 from src.autoresponder import logger
 from src.autoresponder import Configuration
@@ -27,6 +25,6 @@ except FileNotFoundError:
     logger.error(f'Configuration file not found at: {_args.config}')
 except json.JSONDecodeError as e:
     logger.error(f'Could not properly parse {_args.config}: {e}')
-    
+
 autoresponder = AutoResponder(config=config, logger=logger)
 autoresponder.run()

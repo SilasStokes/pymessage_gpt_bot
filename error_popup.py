@@ -1,9 +1,10 @@
+from PyQt5 import QtWidgets
 import sys
 from src.setup_checks import SetupCheckBase
 from src.setup_checks import CheckChatdbAccess, CheckConfigExists, CheckOpenaiKey, CheckShortcutExists
 from src.runtime_environment import CONFIG_PATH
 from src.autoresponder.logger import logger
-logger.debug(f'error_popup module loaded')
+logger.debug('error_popup module loaded')
 
 checks = [
     CheckConfigExists(config_path=CONFIG_PATH),
@@ -12,7 +13,6 @@ checks = [
     CheckShortcutExists()
 ]
 
-from PyQt5 import QtWidgets
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, checks: list[SetupCheckBase]):
@@ -20,7 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("iMessage GPT Bot")
         self.setGeometry(100, 100, 500, 400)
-        
+
         central_widget = QtWidgets.QWidget(self)
         self.setCentralWidget(central_widget)
 
@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         central_widget.setLayout(layout)
 
         message_label = QtWidgets.QLabel("<h2>GPT iMessage Bot is being ran without being fully set up.</h2>"
-                                        "<h3>Make sure you have completed all the installation instructions below:</h3>", self)
+                                         "<h3>Make sure you have completed all the installation instructions below:</h3>", self)
         layout.addWidget(message_label)
         for check in checks:
             if check.success:
@@ -50,15 +50,15 @@ class MainWindow(QtWidgets.QMainWindow):
                     instruction_widget.setStyleSheet("padding-left:30px;")
                     layout.addWidget(instruction_widget)
 
-
         close_button = QtWidgets.QPushButton("Close Window", self)
         close_button.clicked.connect(self.close)
         layout.addWidget(close_button)
 
         self.show()
 
+
 if __name__ == '__main__':
-    logger.debug(f'error_popup main instantiated')
+    logger.debug('error_popup main instantiated')
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("iMessage GPT Bot Setup Window")
     app.setApplicationDisplayName("iMessage GPT Bot Setup Window")
